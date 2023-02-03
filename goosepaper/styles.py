@@ -55,10 +55,14 @@ class Style:
             ]
             self._css = """
                 @page {
-                    margin-top: 0.5in;
-                    margin-right: 0.2in;
-                    margin-left: 0.65in;
-                    margin-bottom: 0.2in;
+                    // screen size is supposed to be 188mm by 246mm, but
+                    // resolution 1404 by 1872 which is not the same ratio,
+                    // so trim to 184.5 x 246.. then take margins off...
+                    size: 74.5mm 236mm; // 174.5
+                    margin-top: 7mm;
+                    margin-bottom: 3mm;
+                    margin-left: 7mm;
+                    margin-right: 3mm;
                 }
 
                 body {

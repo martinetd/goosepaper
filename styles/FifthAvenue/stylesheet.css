@@ -1,15 +1,22 @@
+/* screen size is supposed to be 188mm by 246mm, but
+ * resolution 1404 by 1872 which is not the same ratio,
+ * so trim to 184.5 x 246
+ */
 @page {
-    margin-top: 0.5in;
-    margin-right: 0.2in;
-    margin-left: 0.65in;
-    margin-bottom: 0.2in;
+    /* size: 1404pt 1872pt; */
+    /* size: 184.5 246mm; */
+    size: 702pt 936pt;
+    margin-top: 10mm;
+    margin-bottom: 5mm;
+    margin-left: 10mm;
+    margin-right: 5mm;
 }
 body {
     font-family: "Open Sans";
 }
 .header {
-    padding: 1em;
-    height: 10em;
+    padding: -5em;
+    height: 6em;
 }
 .header div {
     float: left;
@@ -93,4 +100,5 @@ figure>span {
 }
 .row {
     column-count: 2;
+    column-gap: 2rem;
 }
