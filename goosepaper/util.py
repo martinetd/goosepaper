@@ -58,22 +58,13 @@ def load_config_file(filepath: str) -> dict:
 
 def construct_story_providers_from_config_dict(config: dict):
 
-    from goosepaper.storyprovider.rss import RSSFeedStoryProvider
-    from goosepaper.storyprovider.twitter import MultiTwitterStoryProvider
-    from goosepaper.storyprovider.reddit import RedditHeadlineStoryProvider
     from goosepaper.storyprovider.storyprovider import CustomTextStoryProvider
-    from goosepaper.storyprovider.weather import OpenMeteoWeatherStoryProvider
-    from goosepaper.storyprovider.wikipedia import WikipediaCurrentEventsStoryProvider
+    from goosepaper.storyprovider.url import URLFeedStoryProvider
 
     StoryProviderConfigNames = {
         "lorem": CustomTextStoryProvider,
         "text": CustomTextStoryProvider,
-        "twitter": MultiTwitterStoryProvider,
-        "reddit": RedditHeadlineStoryProvider,
-        "weather": OpenMeteoWeatherStoryProvider,
-        "openmeteo_weather": OpenMeteoWeatherStoryProvider,
-        "wikipedia_current_events": WikipediaCurrentEventsStoryProvider,
-        "rss": RSSFeedStoryProvider,
+        "url": URLFeedStoryProvider,
     }
 
     if "stories" not in config:
