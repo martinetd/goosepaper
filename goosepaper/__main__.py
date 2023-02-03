@@ -3,7 +3,6 @@ import datetime
 
 from goosepaper.goosepaper import Goosepaper
 from goosepaper.util import construct_story_providers_from_config_dict
-from goosepaper.upload import upload
 from goosepaper.multiparser import MultiParser
 
 
@@ -40,16 +39,6 @@ def main():
         else:
             print(f"Unknown file extension '{filename.split('.')[-1]}'.")
             exit(1)
-
-    if multiparser.argumentOrConfig("upload"):
-        if multiparser.argumentOrConfig("noupload"):
-            print(
-                "Honk! The 'upload' directive was found, but '--noupload' was also specified on the command line. Your goosepaper {0} was generated but I'm not uploading it.".format(
-                    filename
-                )
-            )
-        else:
-            upload(filepath=filename, multiparser=multiparser)
 
     return 0
 
