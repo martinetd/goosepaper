@@ -5,9 +5,13 @@ error() {
 	exit 1
 }
 
+UPLOAD=1
+CONF=
+
 while [ $# -ge 1 ]; do
 	case "$1" in
 	-c) CONF=1;;
+	-d) UPLOAD="";;
 	-*) error "Unknown option $1";;
 	*) break;;
 	esac
@@ -19,37 +23,40 @@ conf=$(mktemp /tmp/goosepaper.XXXXXXX.conf)
 pdf="${conf%.conf}.pdf"
 trap "rm -f '$conf' '$pdf'" EXIT
 
+
+for url; do
+		cat > "$conf" <<EOF
 {
-	printf "%s\n" "{" \
-		'    "font_size": 12,' \
-		'    "stories": ['
-	while [ $# -ge 1 ]; do
-		cat <<EOF
+    "font_size": 12,
+    "stories": [
         {
             "provider": "url",
             "config": {
-                "url": "$1"
+                "url": "$url"
             }
         }
+    ]
+}
 EOF
-		[ $# -gt 1 ] && printf "        ,\n"
-		shift
-	done
-	printf "%s\n" "    ]" "}"
-} > "$conf"
 
-if [ -n "$CONF" ]; then
-	cat "$conf"
-	exit 0
-fi
+	if [ -n "$CONF" ]; then
+		cat "$conf"
+		continue
+	fi
 
-set -- env PYTHONPATH="$(dirname "$0")" python3 -m goosepaper -c "$conf" -o "$pdf"
-case "$DIRENV_FILE" in
-*/goosepaper/.envrc) ;;
-*) set -- nix develop --quiet --quiet '/etc/nixos#goosepaper' -c "$@";;
-esac
+	# We can apparently overwite $@ in the middle of the for loop safely...
+	set -- env PYTHONPATH="$(dirname "$0")" python3 -m goosepaper -c "$conf" -o "$pdf"
+	case "$DIRENV_FILE" in
+	*/goosepaper/.envrc) ;;
+	*) set -- nix develop --quiet --quiet '/etc/nixos#goosepaper' -c "$@";;
+	esac
+	title=$("$@") || continue
 
-title=$("$@") || exit
-mv "$pdf" "$title.pdf"
-RMAPI_HOST=https://local.appspot.com rmapi put "$title.pdf" "/print/"
-# rm -f "$title.pdf"
+	mv "$pdf" "$title.pdf"
+	if [ -n "$UPLOAD" ]; then
+		RMAPI_HOST=https://local.appspot.com rmapi put "$title.pdf" "/print/"
+	else
+		echo "fake uploading $title.pdf"
+	fi
+	rm -f "$title.pdf"
+done
