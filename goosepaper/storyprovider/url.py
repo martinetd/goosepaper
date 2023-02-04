@@ -36,7 +36,7 @@ class URLFeedStoryProvider(StoryProvider):
         )
         # print to stdout for filename
         alnum = re.compile('[\W_]+')
-        print(alnum.sub('', title)[0:200])
+        print(alnum.sub('_', title)[0:200])
 
         stories.append(story)
 
