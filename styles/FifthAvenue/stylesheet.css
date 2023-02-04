@@ -6,16 +6,16 @@
     /* size: 1404pt 1872pt; */
     /* size: 184.5 246mm; */
     size: 702pt 936pt;
-    margin-top: 10mm;
-    margin-bottom: 5mm;
-    margin-left: 10mm;
-    margin-right: 5mm;
+    margin-top: 30mm;
+    margin-bottom: 20mm;
+    margin-left: 20mm;
+    margin-right: 10mm;
 }
 body {
     font-family: "Open Sans";
 }
 .header {
-    padding: -5em;
+    padding: -6em;
     height: 6em;
 }
 .header div {
