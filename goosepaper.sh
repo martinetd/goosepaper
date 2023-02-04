@@ -54,6 +54,8 @@ EOF
 	*/goosepaper/.envrc) ;;
 	*) set -- nix develop --option warn-dirty false '/etc/nixos#goosepaper' -c "$@";;
 	esac
+	# XXX doesn't work well from diffeent path?
+	cd "$(dirname "$0")" || exit 1
 	title=$("$@") || continue
 
 	mv "$pdf" "/tmp/$title.pdf"
