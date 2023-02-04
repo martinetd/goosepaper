@@ -56,11 +56,18 @@ EOF
 	esac
 	title=$("$@") || continue
 
-	mv "$pdf" "$title.pdf"
+	mv "$pdf" "/tmp/$title.pdf"
+
+	words=$(pdftotext "/tmp/$title.pdf" /dev/stdout | wc -w)
+	if [ "$words" -lt 40 ]; then
+		echo "$url: Less than 30 words, refusing to print" >&2
+		continue
+	fi
+
 	if [ -n "$UPLOAD" ]; then
-		RMAPI_HOST=https://local.appspot.com rmapi put "$title.pdf" "/print/"
+		RMAPI_HOST=https://local.appspot.com rmapi put "/tmp/$title.pdf" "/print/"
 	else
 		echo "fake uploading $title.pdf"
 	fi
-	rm -f "$title.pdf"
+	rm -f "/tmp/$title.pdf"
 done
