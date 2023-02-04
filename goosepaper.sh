@@ -52,7 +52,7 @@ EOF
 	set -- env PYTHONPATH="$(dirname "$0")" python3 -m goosepaper -c "$conf" -o "$pdf"
 	case "$DIRENV_FILE" in
 	*/goosepaper/.envrc) ;;
-	*) set -- nix develop --quiet --quiet '/etc/nixos#goosepaper' -c "$@";;
+	*) set -- nix develop --option warn-dirty false '/etc/nixos#goosepaper' -c "$@";;
 	esac
 	title=$("$@") || continue
 
