@@ -12,6 +12,10 @@ while [ $# -ge 1 ]; do
 	case "$1" in
 	-c) CONF=1;;
 	-d) UPLOAD="";;
+	--clean)
+		rmapi ls print | awk '$1 == "[f]" { print "/print/"$2 }' | xargs -r rmapi rm
+		exit
+		;;
 	-*) error "Unknown option $1";;
 	*) break;;
 	esac
