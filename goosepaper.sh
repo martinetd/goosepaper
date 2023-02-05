@@ -72,7 +72,7 @@ EOF
 
 	words=$(pdftotext "/tmp/$title.pdf" /dev/stdout | wc -w)
 	if [ "$words" -lt 40 ]; then
-		echo "$url: Less than 30 words, refusing to print" >&2
+		echo "$url : Less than 30 words, refusing to print" >&2
 		continue
 	fi
 

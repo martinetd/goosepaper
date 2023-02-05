@@ -22,7 +22,7 @@ class URLFeedStoryProvider(StoryProvider):
         req = requests.get(self.url)
         stories = []
         if not req.ok:
-            print(f"{self.url}: failed to get", file=sys.stderr)
+            print(f"{self.url} : failed to get", file=sys.stderr)
             exit(1)
 
         doc = Document(req.content)
