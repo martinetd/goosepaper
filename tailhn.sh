@@ -55,6 +55,7 @@ done | \
 		echo "$description $link"
 	done | \
 	fzf --no-mouse -m --tac | sed -ne 's@.* \(http.\?://\)@\1@p' | \
+	tee -a .tailhn.log | \
 	xargs -r ./goosepaper.sh
 
 
