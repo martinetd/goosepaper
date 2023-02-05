@@ -64,7 +64,12 @@ EOF
 		esac
 		# XXX doesn't work well from different path?
 		cd "$(dirname "$0")" || exit 1
-		title=$("$@") || continue
+		if ! title=$("$@"); then
+			# should always include url in error messages...
+			[ "${title#*$url}" != "$title" ] || title="$url failed: $title"
+			echo "$title" >&2
+			continue
+		fi
 		;;
 	esac
 

@@ -19,10 +19,14 @@ class URLFeedStoryProvider(StoryProvider):
         self.url = url
 
     def get_stories(self, limit: int = 5, **kwargs) -> List[Story]:
-        req = requests.get(self.url)
+        try:
+            req = requests.get(self.url)
+        except Exception as e:
+            print(f"{self.url} : failed to get: {e}")
+            exit(1)
         stories = []
         if not req.ok:
-            print(f"{self.url} : failed to get", file=sys.stderr)
+            print(f"{self.url} : failed to get")
             exit(1)
 
         doc = Document(req.content)
