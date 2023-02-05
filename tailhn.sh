@@ -23,7 +23,7 @@ while [ "$#" -gt 0 ]; do
 	shift
 done
 
-cd "$(dirname "$0")" || error "cd $0 dir"
+cd "$(dirname "$(realpath "$0")")" || error "cd $0 dir"
 
 [ -e .tailhn.firstday ] && day=$(cat .tailhn.firstday)
 [ -n "$day" ] || day="$today"
