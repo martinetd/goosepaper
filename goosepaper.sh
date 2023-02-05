@@ -29,6 +29,14 @@ trap "rm -f '$conf' '$pdf'" EXIT
 
 
 for url; do
+	case "$url" in
+	*.pdf)
+		curl -o "$pdf" "$url" || continue
+		title=$(pdftotext -layout "$pdf" /dev/stdout | head -n 1 | sed -e 's/^ \+| \+$//g')
+		[ -z "$title" ] && title="${url##*/}" && title="${title%.pdf}"
+		title=$(printf "%s" "$title" | sed -e 's/[^a-zA-Z0-9]\+/_/g')
+		;;
+	*)
 		cat > "$conf" <<EOF
 {
     "font_size": 12,
@@ -43,20 +51,22 @@ for url; do
 }
 EOF
 
-	if [ -n "$CONF" ]; then
-		cat "$conf"
-		continue
-	fi
+		if [ -n "$CONF" ]; then
+			cat "$conf"
+			continue
+		fi
 
-	# We can apparently overwite $@ in the middle of the for loop safely...
-	set -- env PYTHONPATH="$(dirname "$0")" python3 -m goosepaper -c "$conf" -o "$pdf"
-	case "$DIRENV_FILE" in
-	*/goosepaper/.envrc) ;;
-	*) set -- nix develop --option warn-dirty false '/etc/nixos#goosepaper' -c "$@";;
+		# We can apparently overwite $@ in the middle of the for loop safely...
+		set -- env PYTHONPATH="$(dirname "$0")" python3 -m goosepaper -c "$conf" -o "$pdf"
+		case "$DIRENV_FILE" in
+		*/goosepaper/.envrc) ;;
+		*) set -- nix develop --option warn-dirty false '/etc/nixos#goosepaper' -c "$@";;
+		esac
+		# XXX doesn't work well from different path?
+		cd "$(dirname "$0")" || exit 1
+		title=$("$@") || continue
+		;;
 	esac
-	# XXX doesn't work well from diffeent path?
-	cd "$(dirname "$0")" || exit 1
-	title=$("$@") || continue
 
 	mv "$pdf" "/tmp/$title.pdf"
 
