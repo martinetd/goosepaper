@@ -7,11 +7,13 @@ error() {
 
 UPLOAD=1
 CONF=
+STYLE="FifthAvenue"
 
 while [ $# -ge 1 ]; do
 	case "$1" in
 	-c) CONF=1;;
 	-d) UPLOAD="";;
+	-1) STYLE="Academy";;
 	--clean)
 		rmapi ls print | awk '$1 == "[f]" { print "/print/"$2 }' | xargs -r rmapi rm
 		exit
@@ -40,6 +42,7 @@ for url; do
 		cat > "$conf" <<EOF
 {
     "font_size": 14,
+    "style": "$STYLE",
     "stories": [
         {
             "provider": "url",
