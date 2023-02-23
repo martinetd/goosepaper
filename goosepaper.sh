@@ -66,7 +66,7 @@ EOF
 		*) set -- nix develop --option warn-dirty false '/etc/nixos#goosepaper' -c "$@";;
 		esac
 		# XXX doesn't work well from different path?
-		cd "$(dirname "$0")" || exit 1
+		cd "$(dirname "$(realpath "$0")")" || exit 1
 		if ! title=$("$@"); then
 			# should always include url in error messages...
 			[ "${title#*$url}" != "$title" ] || title="$url failed: $title"
