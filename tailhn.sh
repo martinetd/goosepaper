@@ -41,12 +41,15 @@ filter() {
 }
 [ -n "$NOFILT" ] && filter() { :; }
 
-while cat "$hntop.$day.log" && [ "$day" != "$today" ]; do
-	day="$(date -d "$day + 1 day" +%y-%m-%d)"
-	# limit at 100 days, just in casee...
-	ndays=$((ndays + 1))
-	[ "$ndays" -ge 100 ] && break
-done | \
+
+if [ "$day" != "$today" ]; then
+	next=$(date -d "$day + 1 day" +%y-%m-%d)
+	echo "$next" > .tailhn.firstday
+fi
+
+echo "Processing $day"
+
+cat "$hntop.$day.log" | \
 	sed -ne 's@.*egobot> \(.*\) \[[0-9]* [^ ]*\] \(http.\?://.*\) \(http.\?://.*id=\([0-9]*\)\)@\4 \2 \1\n\4 \3 \1@p' \
 	     -e 's@.*egobot> \(.*\) \[[0-9]* [^ ]*\] \(http.\?://.*?id=\([0-9]*\)\)@\3 \2 \1@p' | \
 	while read num link description; do
@@ -57,6 +60,3 @@ done | \
 	fzf --no-mouse -m --tac | sed -ne 's@.* \(http.\?://\)@\1@p' | \
 	tee -a .tailhn.log | \
 	xargs -r ./goosepaper.sh
-
-
-echo "$today" > .tailhn.firstday
