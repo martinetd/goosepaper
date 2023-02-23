@@ -39,7 +39,7 @@ for url; do
 	*)
 		cat > "$conf" <<EOF
 {
-    "font_size": 12,
+    "font_size": 14,
     "stories": [
         {
             "provider": "url",
